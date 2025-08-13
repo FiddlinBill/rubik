@@ -228,6 +228,16 @@ class test_rotate(unittest.TestCase):
             rotate(initialize_cube(), 2, 0),
             cube
         )
+
+    # It should yield original cube when same slice is rotated 4 times
+    def test_rotate_4(self):
+        cube = initialize_cube()
+        for _ in range(4):
+            cube = rotate(cube, 0, 0)
+        np.testing.assert_array_equal(
+            initialize_cube(),
+            cube
+        )
 class test_map_orientation(unittest.TestCase):
 
     def test_map_orientation_slice_fb(self):
