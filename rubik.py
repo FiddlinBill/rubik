@@ -9,9 +9,10 @@ import numpy as np
 # 2 LR Left Right axis
 
 # ELEMENTS
-# there are 3 x 3 x 3 = 27 elements in a rubik's cube
-# each element has 6 faces. Let the starting colors be in the given
-# orientation:
+# there are 3 x 3 x 3 = 27 elements in a rubik's cube and each element has 6
+# faces. Each element is specified as 1x6 array with a number indicating color
+# and position in the array indicating orientation:
+# Let the starting colors be in the given orientation:
 
 # 0 u Up (White)
 # 1 f Forward (Red)
@@ -20,11 +21,15 @@ import numpy as np
 # 4 r Right (Blue)
 # 5 d Down (Yellow)
 
+# [u, f, l, b, r, d]
+
 # CUBE DEFINITION
-# Imagine taking 3x3x1 slices of the cube looking at the red face with white
-# facing up.
-# Then, on the first slice, start at the top left and reading the
-# elements from left to right downwards. Then, move on to the next slice.
+# a cube may be represented as a 3x3x3x6 matrix because each of the 27 elements
+# of a Rubik's cube has 6 faces.
+# Now, imagine taking 3x3x1 vertical slices of the cube looking at the red face
+# with white facing up. Then, on the first slice, start at the top left and
+# read the elements from left to right downwards. Then, move on to the next
+# slice.
 # A number has been assigned to each visible face of an element.
 # Up/White: 0-9
 # Forward/Red: 10-18
@@ -33,15 +38,10 @@ import numpy as np
 # Right/Blue: 37-45
 # Down/Yellow: 46-54
 
-# Each element is specified as 1x6 array with a number indication color and
-# position in the array
-# indicating orientation.
-# [u, f, l, b, r, d]
 
-# mapping colors to their new orientation
+# MAPPING COLORS TO NEW ORIENTATION
 # element definition: [u, f, l, b, r, d]
-# orientation definition: [up, front, left, back, right, down]
-# on the FB axis, CW rotation goes like this
+# on the FB axis, Clockwise (CW) rotation goes like this
 # l -> u-> 2
 # f -> f-> 1
 # d -> l-> 5
@@ -49,7 +49,17 @@ import numpy as np
 # u -> r-> 0
 # r -> d-> 4
 
-# FB: [2, 1, 5, 3, 0, 4]
+# CW on FB: [2, 1, 5, 3, 0, 4]
+
+# on the FB axis, Counter Clockwise (CCW) rotation goes like this
+# r -> u -> 4
+# f -> f -> 1
+# u -> l -> 0
+# b -> b -> 3
+# d -> r -> 4
+# l -> d -> 2
+
+# CCW on FB: [4, 1, 0, 3, 5, 2]
 
 # on the UD axis, CW rotation goes like this
 # u -> u -> 0
@@ -59,7 +69,18 @@ import numpy as np
 # b -> r -> 3
 # d -> d -> 5
 
-# UD: [0, 4, 1, 2, 3, 5]
+# CW on UD: [0, 4, 1, 2, 3, 5]
+
+# on the UD axis, CCW rotation goes like this
+# u -> u -> 0
+# l -> f -> 2
+# b -> l -> 3
+# r -> b -> 4
+# f -> r -> 1
+# d -> d -> 5
+
+# CCW on UD: [0, 2, 3, 4, 1, 5]
+
 
 # on the LR axis, CW rotation goes like this
 # b -> u -> 3
@@ -69,7 +90,18 @@ import numpy as np
 # r -> r -> 4
 # f -> d -> 1
 
-# LR: [3, 0, 2, 5, 4, 1]
+# CW on LR: [3, 0, 2, 5, 4, 1]
+
+
+# on the LR axis, CCW rotation goes like this
+# f -> u -> 1
+# d -> f -> 5
+# l -> l -> 2
+# u -> b -> 0
+# r -> r -> 4
+# b -> d -> 3
+
+# CCW on LR: [1, 5, 2, 0, 4, 3]
 
 # SLICING
 # FB 90deg rotation
@@ -87,21 +119,29 @@ import numpy as np
 # rotate(2, 1) -> cube[:, :, 1]
 # rotate(2, 2) -> cube[:, :, 2]
 
+solved_faces = np.split(np.arange(1, 55), 6)
+
+face_selectors = [
+    (slice(None), 0, slice(None), 0),
+    (0, slice(None), slice(None), 1),
+    (slice(None), slice(None), 0, 2),
+    (2, slice(None), slice(None), 3),
+    (slice(None), slice(None), 2, 4),
+    (slice(None), 2, slice(None), 5)
+]
+
 
 def initialize_cube():
-    """initializes a zero cube and fills the faces with ascending numbers"""
+    """initializes a solved cube, which is a zero cube where each face is
+    filled with ascending numbers"""
     cube = np.zeros((3, 3, 3, 6))
-    cube[:, 0, :, 0] = np.arange(1, 10).reshape((3, 3))
-    cube[0, :, :, 1] = np.arange(10, 19).reshape((3, 3))
-    cube[:, :, 0, 2] = np.arange(19, 28).reshape((3, 3))
-    cube[2, :, :, 3] = np.arange(28, 37).reshape((3, 3))
-    cube[:, :, 2, 4] = np.arange(37, 46).reshape((3, 3))
-    cube[:, 2, :, 5] = np.arange(46, 55).reshape((3, 3))
+    for idx, selector in enumerate(face_selectors):
+        cube[selector] = solved_faces[idx].reshape((3, 3))
 
     return cube
 
 
-def rotate(cube, axis, position):
+def rotate(cube, axis=0, position=0, direction="CW"):
     """rotates a 3x3x1 block of a Rubik's cube around a given axis"""
     selectors = [
         (position, slice(None), slice(None)),
@@ -113,24 +153,42 @@ def rotate(cube, axis, position):
     affected = cube[selectors[axis]]
 
     # Process rotation
-    affected = rotate_slice(affected, axis)
-    affected = map_color_to_orientation(affected, get_axis_map(axis))
+    affected = rotate_slice(affected, axis, direction)
+    affected = map_color_to_orientation(
+        affected,
+        get_axis_map(axis, direction)
+    )
 
     # Assign back
     cube[selectors[axis]] = affected
     return cube
 
 
-def rotate_slice(elements, axis):
-    return np.rot90(elements, axes=(0, 1) if axis == 1 else (1, 0))
+def rotate_slice(elements, axis=0, direction="CW"):
+
+    # determines which direction to rotate
+    rotation_axes = {
+        "CW": (1, 0) if axis != 1 else (0, 1),
+        "CCW": (0, 1) if axis != 1 else (1, 0)
+    }[direction]
+
+    return np.rot90(elements, axes=rotation_axes)
 
 
-def get_axis_map(axis):
-    return [
-        [2, 1, 5, 3, 0, 4],
-        [0, 4, 1, 2, 3, 5],
-        [3, 0, 2, 5, 4, 1]
-    ][axis]
+def get_axis_map(axis=0, direction="CW"):
+
+    return {
+        "CW": [
+            [2, 1, 5, 3, 0, 4],
+            [0, 4, 1, 2, 3, 5],
+            [3, 0, 2, 5, 4, 1]
+        ],
+        "CCW": [
+            [4, 1, 0, 3, 5, 2],
+            [0, 2, 3, 4, 1, 5],
+            [1, 5, 2, 0, 4, 3]
+        ]
+    }[direction][axis]
 
 
 def map_color_to_orientation(block, axis_map):
@@ -142,22 +200,12 @@ def map_color_to_orientation(block, axis_map):
 
 def check_solution(cube):
     """checks a given cube to see if it is solved"""
-    for face_index in np.arange(6):
-        is_solved = False
-        face = cube[:, :, :, face_index]
-        # remove zeros and sort array
-        filtered_face = np.sort(face[np.where(face != 0)])
+    for selector in face_selectors:
+        face = np.sort(cube[selector].flatten())
+        is_contained = any(
+            np.array_equal(face, solved_face) for solved_face in solved_faces
+        )
+        if not is_contained:
+            return False
 
-        # check that the numbers are consecutive
-        for idx in np.arange(9):
-            # skip the first iteration so that we dont get index out of range
-            if idx == 0:
-                continue
-
-            # if the numbers are not consecutive the cube is not solved
-            if filtered_face[idx] != filtered_face[idx - 1] + 1:
-                return False
-
-            is_solved = idx == len(filtered_face) - 1
-
-        return is_solved
+    return True

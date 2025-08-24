@@ -9,40 +9,116 @@ from rubik import (
     map_color_to_orientation
 )
 
-# a position 0 slice on the fb axis that has been rotated 90 CW.
-# Colors have not been remapped
-slice_after_rot90 = np.array([  # 1st slice
+rot90_fb_cw_rot90_ud_ccw = np.array([
     [
-         [0, 16, 27, 0, 0, 46], [0, 13, 24, 0, 0, 0], [7, 10, 21, 0, 0, 0]
+        [
+            [7,  25, 28, 0,  0,  0],
+            [4,  22, 0,  0,  0,  0],
+            [21, 46, 0, 0, 16, 0]
+        ],
+        [
+            [0, 17, 47, 0, 0, 0],
+            [0, 14, 0, 0, 0, 0],
+            [0, 11, 0, 0, 2, 0]
+        ],
+        [
+            [0, 18, 48, 0, 0, 39],
+            [0, 15, 0, 0, 0, 38],
+            [0, 12, 0, 0, 3, 37]
+        ]
     ],
     [
-        [0, 17, 0, 0, 0, 47], [0, 14, 0, 0, 0, 0], [8, 11, 0, 0, 0, 0]
+        [
+            [8,  0,  29, 0,  0,  0],
+            [5,  0,  0,  0,  0,  0],
+            [20, 0, 0, 0, 13, 0]
+        ],
+        [
+            [0,  0, 23,  0,  0,  0],
+            [0,  0,  0,  0,  0,  0],
+            [0,  0,  0,  0, 41,  0]
+        ],
+        [
+            [0,  0, 24,  0,  0, 49],
+            [0,  0,  0,  0,  0, 50],
+            [0,  0,  0,  0, 42, 51]
+        ]
     ],
     [
-        [0, 18, 0, 0, 43, 48], [0, 15, 0, 0, 40, 0], [9, 12, 0, 0, 37, 0]
+        [
+            [9,  0,  30, 43, 0,  0],
+            [6,  0,  0,  40, 0,  0],
+            [19, 0, 0, 1, 10, 0]
+        ],
+        [
+            [0,  0, 26, 31,  0,  0],
+            [0,  0,  0, 32,  0,  0],
+            [0,  0,  0, 33, 44,  0]
+        ],
+        [
+            [0,  0, 27, 34,  0, 52],
+            [0,  0,  0, 35,  0, 53],
+            [0,  0,  0, 36, 45, 54]
+        ]
     ]
 ])
 
-# a slice taken at position 0 on the fb axis and rotated 90
-# orientation has been remapped
-rot90_fb = np.array([
+rot90_fb_cw_rot90_ud_ccw_no_map = np.array([
     [
-        [21, 16, 46,  0,  0, 0],
-        [20, 13, 0,  0,  0,  0],
-        [19, 10, 0,  0,  1,  0]
+        [
+            [7,  0, 25, 28,  0,  0],
+            [4,  0, 22,  0,  0,  0],
+            [21, 16, 46, 0, 0, 0]
+        ],
+        [
+            [0, 17, 47, 0, 0, 0],
+            [0, 14, 0, 0, 0, 0],
+            [0, 11, 0, 0, 2, 0]
+        ],
+        [
+            [0, 18, 48, 0, 0, 39],
+            [0, 15, 0, 0, 0, 38],
+            [0, 12, 0, 0, 3, 37]
+        ]
     ],
     [
-        [0, 17,  47,  0,  0, 0],
-        [0, 14,  0,  0,  0,  0],
-        [0, 11,  0,  0,  2,  0]
+        [
+            [8,  0,  0, 29,  0,  0],
+            [5,  0,  0,  0,  0,  0],
+            [20, 13, 0, 0, 0, 0]
+        ],
+        [
+            [0,  0, 23,  0,  0,  0],
+            [0,  0,  0,  0,  0,  0],
+            [0,  0,  0,  0, 41,  0]
+        ],
+        [
+            [0,  0, 24,  0,  0, 49],
+            [0,  0,  0,  0,  0, 50],
+            [0,  0,  0,  0, 42, 51]
+        ]
     ],
     [
-        [0, 18,  48,  0, 0, 39],
-        [0, 15,  0,  0, 0,  38],
-        [0, 12,  0,  0, 3,  37]
+        [
+            [9,  0,  0, 30, 43,  0],
+            [6,  0,  0,  0, 40,  0],
+            [19, 10, 0, 0, 1, 0]
+        ],
+        [
+            [0,  0, 26, 31,  0,  0],
+            [0,  0,  0, 32,  0,  0],
+            [0,  0,  0, 33, 44,  0]
+        ],
+        [
+            [0,  0, 27, 34,  0, 52],
+            [0,  0,  0, 35,  0, 53],
+            [0,  0,  0, 36, 45, 54]
+        ]
     ]
 ])
 
+# a slice taken at positio 0 on the fb axis and rotated 90 CW
+# orientation has not been remapped
 rot90_fb_no_map = np.array([
     [
         [0, 16, 21,  0,  0, 46],
@@ -58,6 +134,109 @@ rot90_fb_no_map = np.array([
         [0, 18,  0,  0, 39, 48],
         [0, 15,  0,  0, 38,  0],
         [3, 12,  0,  0, 37,  0]
+    ]
+])
+
+# a slice taken at position 0 on the fb axis and rotated 90 CW
+# orientation has been remapped
+rot90_fb = np.array([
+    [
+        [21, 16, 46, 0, 0, 0],
+        [20, 13, 0, 0, 0, 0],
+        [19, 10, 0, 0, 1, 0]
+    ],
+    [
+        [0, 17, 47, 0, 0, 0],
+        [0, 14, 0, 0, 0, 0],
+        [0, 11, 0, 0, 2, 0]
+    ],
+    [
+        [0, 18, 48, 0, 0, 39],
+        [0, 15, 0, 0, 0, 38],
+        [0, 12, 0, 0, 3, 37]
+    ]
+])
+
+# a slice taken at position 2 on the fb axis and rotated 90
+# orientation has not been remapped
+rot90_fb_pos_2_no_map = np.array([
+    [
+        [0, 0, 27, 34, 0, 52],
+        [0, 0, 26, 31, 0, 0],
+        [7, 0, 25, 28, 0, 0]
+    ],
+    [
+        [0, 0, 0, 35, 0, 53],
+        [0, 0, 0, 32, 0, 0],
+        [8, 0, 0, 29, 0, 0]
+    ],
+    [
+        [0, 0, 0, 36, 45, 54],
+        [0, 0, 0, 33, 44, 0],
+        [9, 0, 0, 30, 43, 0]
+    ]
+])
+
+
+# a slice taken at position 0 on the fb axis and rotated 90 CCW
+# orientation has not been remapped
+rot90_fb_ccw_no_map = np.array([
+    [
+        [3, 12, 0, 0, 37, 0],
+        [0, 15, 0, 0, 38, 0],
+        [0, 18, 0, 0, 39, 48]
+    ],
+    [
+        [2, 11, 0, 0, 0, 0],
+        [0, 14, 0, 0, 0, 0],
+        [0, 17, 0, 0, 0, 47]
+    ],
+    [
+        [1, 10, 19, 0, 0, 0],
+        [0, 13, 20, 0, 0, 0],
+        [0, 16, 21, 0, 0, 46]
+    ]
+])
+
+
+# a slice taken at position 0 on the fb axis and rotated 90 CCW
+# orientation has been remapped
+rot90_fb_ccw = np.array([
+    [
+        [37, 12, 3, 0, 0, 0],
+        [38, 15, 0, 0, 0, 0],
+        [39, 18, 0, 0, 48, 0]
+    ],
+    [
+        [0, 11, 2, 0, 0, 0],
+        [0, 14, 0, 0, 0, 0],
+        [0, 17, 0, 0, 47, 0]
+    ],
+    [
+        [0, 10, 1, 0, 0, 19],
+        [0, 13, 0, 0, 0, 20],
+        [0, 16, 0, 0, 46, 21]
+    ]
+])
+
+
+# a slice taken at position 2 on the fb axis and rotated 90
+# orientation has been remapped
+rot90_fb_pos_2 = np.array([
+    [
+        [27, 0, 52, 34, 0, 0],
+        [26, 0, 0, 31, 0, 0],
+        [25, 0, 0, 28, 7, 0]
+    ],
+    [
+        [0, 0, 53, 35, 0, 0],
+        [0, 0, 0, 32, 0, 0],
+        [0, 0, 0, 29, 8, 0]
+    ],
+    [
+        [0, 0, 54, 36, 0, 45],
+        [0, 0, 0, 33, 0, 44],
+        [0, 0, 0, 30, 9, 43]
     ]
 ])
 
@@ -100,6 +279,48 @@ rot90_ud_no_map = np.array([
         [1, 10, 19, 0, 0, 0],
         [4, 0, 22, 0, 0, 0],
         [7, 0, 25, 28, 0, 0]
+    ]
+])
+
+
+# a slice taken at position 0 on the ud axis and rotated 90 CCW
+# orientation has been remapped
+rot90_ud_ccw = np.array([
+    [
+        [7, 25, 28, 0, 0, 0],
+        [4, 22, 0, 0, 0, 0],
+        [1, 19, 0, 0, 10, 0]
+    ],
+    [
+        [8, 0, 29, 0, 0, 0],
+        [5, 0, 0, 0, 0, 0],
+        [2, 0, 0, 0, 11, 0]
+    ],
+    [
+        [9, 0, 30, 43, 0, 0],
+        [6, 0, 0, 40, 0, 0],
+        [3, 0, 0, 37, 12, 0]
+    ]
+])
+
+
+# a slice taken at position 0 on the ud axis and rotated 90 CCW
+# orientation has not been remapped
+rot90_ud_ccw_no_map = np.array([
+    [
+        [7, 0, 25, 28, 0, 0],
+        [4, 0, 22, 0, 0, 0],
+        [1, 10, 19, 0, 0, 0]
+    ],
+    [
+        [8, 0, 0, 29, 0, 0],
+        [5, 0, 0, 0, 0, 0],
+        [2, 11, 0, 0, 0, 0]
+    ],
+    [
+        [9, 0, 0, 30, 43, 0],
+        [6, 0, 0, 0, 40, 0],
+        [3, 12, 0, 0, 37, 0]
     ]
 ])
 
@@ -153,6 +374,40 @@ class test_check_solution(unittest.TestCase):
             "Should be true"
         )
 
+    # It should return true if cube is solved alternatively
+    def test_solved_alt(self):
+        cube = np.zeros((3, 3, 3, 6))
+        cube[:, 0, :, 0] = np.arange(1, 10).reshape((3, 3))
+        cube[0, :, :, 1] = np.arange(28, 37).reshape((3, 3))
+        cube[:, :, 0, 2] = np.arange(19, 28).reshape((3, 3))
+        cube[2, :, :, 3] = np.arange(10, 19).reshape((3, 3))
+        cube[:, :, 2, 4] = np.arange(37, 46).reshape((3, 3))
+        cube[:, 2, :, 5] = np.arange(46, 55).reshape((3, 3))
+        self.assertEqual(
+            check_solution(initialize_cube()),
+            True,
+            "Should be true"
+        )
+
+    # It should return true if cube is solved (randomized order)
+    def test_solved_alt_1(self):
+        cube = np.zeros((3, 3, 3, 6))
+        face1 = np.arange(46, 55).reshape(3, 3)
+        face2 = np.arange(28, 37).reshape(3, 3)
+        np.random.shuffle(face1)
+        np.random.shuffle(face2)
+
+        cube[:, 0, :, 0] = face1
+        cube[0, :, :, 1] = face2
+        cube[:, :, 0, 2] = np.arange(37, 46).reshape((3, 3))
+        cube[2, :, :, 3] = np.arange(10, 19).reshape((3, 3))
+        cube[:, :, 2, 4] = np.arange(19, 28).reshape((3, 3))
+        cube[:, 2, :, 5] = np.arange(1, 10).reshape((3, 3))
+        self.assertEqual(
+            check_solution(initialize_cube()),
+            True,
+            "Should be true"
+        )
     # It should return false if cube is not solved
     def test_not_solved(self):
         cube = initialize_cube()
@@ -177,29 +432,54 @@ class test_initialize_cube(unittest.TestCase):
 
 class test_rotate_slice(unittest.TestCase):
 
-    # It should rotate on the FB axis successfully
-    def test_rotate_slice_fb(self):
+    # It should rotate CW on the FB axis successfully
+    def test_rotate_slice_cw_fb(self):
         cube = initialize_cube()
         np.testing.assert_array_equal(
-            rotate_slice(cube[0, :, :], 0),
+            rotate_slice(cube[0, :, :]),
             rot90_fb_no_map
         )
 
-    # It should rotate on the UD axis successfully
-    def test_rotate_slice_ud(self):
+    # It should rotate CCW on the FB axis successfully
+    def test_rotate_slice_ccw_fb(self):
+        cube = initialize_cube()
+        np.testing.assert_array_equal(
+            rotate_slice(cube[0, :, :], 0, "CCW"),
+            rot90_fb_ccw_no_map
+        )
+
+    # It should rotate CW on the FB axis pos 2 successfully
+    def test_rotate_slice_cw_fb_pos_2(self):
+        cube = initialize_cube()
+        np.testing.assert_array_equal(
+            rotate_slice(cube[2, :, :]),
+            rot90_fb_pos_2_no_map
+        )
+
+    # It should rotate CW on the UD axis successfully
+    def test_rotate_slice_cw_ud(self):
         cube = initialize_cube()
         np.testing.assert_array_equal(
             rotate_slice(cube[:, 0, :], 1),
             rot90_ud_no_map
         )
 
-    # It should rotate on the LR axis successfully
-    def test_rotate_slice_rl(self):
+    # It should rotate CCW on the UD axis successfully
+    def test_rotate_slice_ccw_ud(self):
+        cube = initialize_cube()
+        np.testing.assert_array_equal(
+            rotate_slice(cube[:, 0, :], 1, "CCW"),
+            rot90_ud_ccw_no_map
+        )
+
+    # It should rotate CW on the LR axis successfully
+    def test_rotate_slice_cw_rl(self):
         cube = initialize_cube()
         np.testing.assert_array_equal(
             rotate_slice(cube[:, :, 0], 2),
             rot90_lr_no_map
         )
+
 class test_rotate(unittest.TestCase):
 
     # It should rotate on the FB axis position 0 successfully
@@ -208,6 +488,23 @@ class test_rotate(unittest.TestCase):
         cube[0, :, :] = rot90_fb
         np.testing.assert_array_equal(
             rotate(initialize_cube(), 0, 0),
+            cube
+        )
+
+    def test_rotate_fb_ccw(self):
+        cube = initialize_cube()
+        cube[0, :, :] = rot90_fb_ccw
+        np.testing.assert_array_equal(
+            rotate(initialize_cube(), 0, 0, "CCW"),
+            cube
+        )
+
+    # It should rotate on the FB axis position 2 successfully
+    def test_rotate_fb_pos_2(self):
+        cube = initialize_cube()
+        cube[2, :, :] = rot90_fb_pos_2
+        np.testing.assert_array_equal(
+            rotate(initialize_cube(), 0, 2),
             cube
         )
 
@@ -220,7 +517,16 @@ class test_rotate(unittest.TestCase):
             cube
         )
 
-    # It should rotate on the UD axis successfully
+    # It should rotate CCW on the UD axis successfully
+    def test_rotate_ud_ccw(self):
+        cube = initialize_cube()
+        cube[:, 0, :] = rot90_ud_ccw
+        np.testing.assert_array_equal(
+            rotate(initialize_cube(), 1, 0, "CCW"),
+            cube
+        )
+
+    # It should rotate on the LR axis successfully
     def test_rotate_lr(self):
         cube = initialize_cube()
         cube[:, :, 0] = rot90_lr
@@ -238,6 +544,17 @@ class test_rotate(unittest.TestCase):
             initialize_cube(),
             cube
         )
+
+    # It should rotate CW on the FB axis then CCW on the UD axis successfully
+    def test_rotate_fb_cw_ud_ccw(self):
+        cube = initialize_cube()
+        cube = rotate(cube, 0, 0)
+        cube = rotate(cube, 1, 0, "CCW")
+        np.testing.assert_array_equal(
+            cube,
+            rot90_fb_cw_rot90_ud_ccw
+        )
+
 class test_map_orientation(unittest.TestCase):
 
     def test_map_orientation_slice_fb(self):
