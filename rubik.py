@@ -1,5 +1,6 @@
 """A bunch of utility functions for manipulating a Rubik's cube"""
 import numpy as np
+from random import randrange
 
 # DEFINITIONS
 
@@ -129,6 +130,19 @@ face_selectors = [
     (slice(None), slice(None), 2, 4),
     (slice(None), 2, slice(None), 5)
 ]
+
+
+def randomize_cube(cube, rotations=30):
+    """randomizes a given cube"""
+    for rotation in np.arange(rotations):
+        directions = ["CW", "CCW"]
+        axis = randrange(3)
+        direction = randrange(2)
+        position = randrange(3)
+
+        cube = rotate(cube, axis, position, directions[direction])
+
+    return cube
 
 
 def initialize_cube():
